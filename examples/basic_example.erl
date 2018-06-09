@@ -17,7 +17,7 @@ send(SerialPort) ->
 listen() ->
   receive
     % Receive data from the serial port on the caller's PID.
-    {data, Bytes} ->
+    {data, _SerialPid, Bytes} ->
       io:format("~s", [Bytes]),
       listen()
   after

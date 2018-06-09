@@ -50,7 +50,7 @@ process can handle the data by implementing a function like the following:
 listen() ->
   receive
     % Receive data from the serial port on the caller's PID.
-    {data, Bytes} ->
+    {data, _SerialPid, Bytes} ->
       io:format("~s", [Bytes]),
       listen()
   after
