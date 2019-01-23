@@ -59,7 +59,7 @@ init(Pid) ->
 loop(Pid,Port) ->
     receive
 	{Port, {data, Bytes}} ->
-	    Pid ! {data, Bytes},
+	    Pid ! {data, self(), Bytes},
 	    serial:loop(Pid,Port);
 	{send, Bytes} ->
 	    send_serial(Port,[?SEND,Bytes]),
