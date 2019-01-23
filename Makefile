@@ -61,6 +61,7 @@ priv/bin:
 priv/bin/serial: $(OBJECT_FILES) priv/bin
 	mkdir -p priv/bin
 	$(CC) -o $@ $(LDFLAGS) $(OBJECT_FILES) $(LDLIBS)
+	rm $(OBJECT_FILES)
 
 clean:
 	rm -f priv/bin/serial $(OBJECT_FILES) $(BEAM_FILES)
