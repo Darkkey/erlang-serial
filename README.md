@@ -1,4 +1,4 @@
-# erlang-serial
+# erlserial (former erlang-serial)
 
 This is a port program with erlang driver for serial communication,
 originally written by Johan Bevemyr in 1996 and sporadically
@@ -52,7 +52,7 @@ process can handle the data by implementing a function like the following:
 listen() ->
   receive
     % Receive data from the serial port on the caller's PID.
-    {data, Bytes} ->
+    {data, _SerialPid, Bytes} ->
       io:format("~s", [Bytes]),
       listen()
   after
@@ -68,7 +68,7 @@ See `examples/terminal.erl` for more example code (using the now-obsolete `gs` m
 ## License
 
 Copyright (c) 1996, 1999 Johan Bevemyr  
-Copyright (c) 2007, 2009 Tony Garnock-Jones
+Copyright (c) 2007, 2009 Tony Garnock-Jones  
 Copyright (c) 2019 Alexander Bolshev aka dark_k3y
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
