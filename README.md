@@ -2,7 +2,9 @@
 
 This is a port program with erlang driver for serial communication,
 originally written by Johan Bevemyr in 1996 and sporadically
-maintained by Tony Garnock-Jones from 2007 onwards.
+maintained by Tony Garnock-Jones from 2007 onwards. This package was
+forked from https://github.com/tonyg/erlang-serial to make it work
+with rebar, so it could be included into erlamsa package.
 
 ## Installation
 
@@ -50,7 +52,7 @@ process can handle the data by implementing a function like the following:
 listen() ->
   receive
     % Receive data from the serial port on the caller's PID.
-    {data, _SerialPid, Bytes} ->
+    {data, Bytes} ->
       io:format("~s", [Bytes]),
       listen()
   after
@@ -67,6 +69,7 @@ See `examples/terminal.erl` for more example code (using the now-obsolete `gs` m
 
 Copyright (c) 1996, 1999 Johan Bevemyr  
 Copyright (c) 2007, 2009 Tony Garnock-Jones
+Copyright (c) 2019 Alexander Bolshev aka dark_k3y
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

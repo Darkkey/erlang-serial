@@ -1,5 +1,6 @@
 %% Copyright (c) 1996, 1999 Johan Bevemyr
 %% Copyright (c) 2007, 2009 Tony Garnock-Jones
+%% Copyright (c) 2019 Alexander Bolshev aka dark_k3y
 %% 
 %% Permission is hereby granted, free of charge, to any person obtaining a copy
 %% of this software and associated documentation files (the "Software"), to deal
@@ -33,12 +34,9 @@
 -include("serial.hrl").
 
 priv_dir() ->
-    case code:priv_dir(serial) of
-	{error, bad_name} ->
-	    "./priv";
-	D ->
-	    D
-    end.
+    filename:join([
+        filename:dirname( code:which( ?MODULE ) ),
+        "..", "priv"]).
 
 start() ->
     start([]).
@@ -61,7 +59,7 @@ init(Pid) ->
 loop(Pid,Port) ->
     receive
 	{Port, {data, Bytes}} ->
-	    Pid ! {data, self(), Bytes},
+	    Pid ! {data, Bytes},
 	    serial:loop(Pid,Port);
 	{send, Bytes} ->
 	    send_serial(Port,[?SEND,Bytes]),
