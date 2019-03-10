@@ -29,7 +29,7 @@
 -module(serial).
 -author('jb@erix.ericsson.se').
 
--export([start/0,start/1,init/1,loop/2]).
+-export([start/0,start/1,init/2,loop/2]).
 
 -include("serial.hrl").
 
@@ -42,7 +42,7 @@ start() ->
     start([]).
 
 start(Options) ->
-    Pid = spawn_link(serial, init, [self()]),
+    Pid = spawn_link(serial, init, [self(), Options]),
     process_options(Pid,Options),
     Pid.
 
@@ -51,9 +51,14 @@ process_options(Pid,[Opt|Opts]) ->
     Pid ! Opt,
     process_options(Pid,Opts).
 
-init(Pid) ->
+init(Pid, Options) ->
     process_flag(trap_exit,true),
-    Port = open_port({spawn,priv_dir()++"/bin/serial -erlang"},[binary,{packet,2}]),
+    SerialExe = 
+	case lists:foldl(fun ({serialexe, Exe}, _Acc) -> Exe; (_, Acc) -> Acc end, [], Options) of
+	    [] -> priv_dir()++"/bin/serial -erlang";
+	    OptExe -> OptExe ++ " -erlang"
+	end,
+    Port = open_port({spawn,SerialExe},[binary,{packet,2}]),
     loop(Pid,Port).
 
 loop(Pid,Port) ->
@@ -92,6 +97,8 @@ loop(Pid,Port) ->
 	    serial:loop(Pid,Port);
 	{break} ->
 	    send_serial(Port,[?BREAK]),
+	    serial:loop(Pid,Port);
+	{serialexe, _} ->
 	    serial:loop(Pid,Port);
 	stop ->
 	    stopped;
